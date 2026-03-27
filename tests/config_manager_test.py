@@ -1,7 +1,7 @@
 """Shared pytest fixtures and hooks. Add fixtures here as needed."""
 
 
-from config_framework import DefaultConfigManagerFactory
+from cfgfw import DefaultConfigManagerFactory
 from pathlib import Path
 
 def test_config_manager_factory()->None:

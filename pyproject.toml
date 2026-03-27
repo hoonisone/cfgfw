@@ -17,7 +17,7 @@ dev = ["build", "twine", "pytest"]
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/config_framework"]
+packages = ["src/cfgfw"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
