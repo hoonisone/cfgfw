@@ -1,4 +1,4 @@
-from typing import Any, Optional, Callable, Hashable
+from typing import Any, Optional, Callable, Hashable, List, Dict
 
 class RecursiveContext:    
     # 파이썬 자료 구조 (dict, list, tuple) 를 순회하며 작업하는 context 제공
@@ -54,3 +54,41 @@ class RecursiveContext:
             return [cls.filter(item, is_remove_target, idx=i, depth = depth + 1, d_limit=d_limit) for i, item in enumerate(data) if not is_remove_target(item, None, i)]
         else:
             return data
+
+
+    @classmethod
+    def find(cls, 
+        data:ValueType, 
+        is_target:Callable[[Any], Any],
+        make_return:Callable[[Any], Any],
+        k:KeyType = None,
+        idx:Optional[int] = None,
+        depth:int = 0,
+        d_limit:Optional[int] = None,
+        ref_history:List[Any] = []
+    )->List[Any]:
+    # dict, list로 이루어진 data를 순회 하며 타겟을 찾고 원하는 형태로 가공하여 반환하는 컨텍스트
+        
+        state = dict(
+            data = data,
+            k = k,
+            idx = idx,
+            depth = depth,
+            d_limit = d_limit,
+            ref_history = ref_history
+        )
+        
+        results = []
+        
+        if is_target(state):
+            results.append(make_return(state))
+
+        elif isinstance(data, dict):
+            for k, v in data.items():
+                results.extend(cls.find(v, is_target, make_return, k=k, idx=None, depth=depth+1, d_limit=d_limit, ref_history=ref_history+[k]))
+
+        elif isinstance(data, list):
+            for i, item in enumerate(data):
+                results.extend(cls.find(item, is_target, make_return, k=k, idx=i, depth=depth+1, d_limit=d_limit, ref_history=ref_history+[i]))
+
+        return results

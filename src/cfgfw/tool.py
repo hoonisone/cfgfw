@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Callable
 from copy import deepcopy
 from abc import ABC, abstractmethod
-
+import sys
 
 
 class DictTool:
@@ -45,8 +45,11 @@ class DictTool:
         empty_tag = empty_tag or self.empty_tag
 
         for key, value in override.items():
-            if value is empty_tag:
-                continue
+            # if value is empty_tag:
+            #     if key in base:
+            #         continue
+            #     else:
+            #         base[key] = deepcopy(value)
 
             
             if isinstance(value, dict) and value.get('__delete__', False):
@@ -57,6 +60,9 @@ class DictTool:
 
             if key not in base:
                 base[key] = deepcopy(value)
+                continue
+                
+            if value is empty_tag:
                 continue
 
             if isinstance(value, dict) and isinstance(base.get(key), dict):
@@ -80,7 +86,8 @@ class DictTool:
             except Exception as e:
                 print(e)
                 print(config)
-                exit()
+                raise e
+                # sys.exit()
         return cfg
 
 
@@ -92,7 +99,8 @@ class DictTool:
         except Exception as e:
             print(e)
             print(keys)
-            exit()
+            raise e
+            # sys.exit()
     
 
     def set(self, data:dict, keys:list[str], value:Any)->None:
