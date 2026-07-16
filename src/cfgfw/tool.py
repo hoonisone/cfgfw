@@ -5,10 +5,9 @@ from copy import deepcopy
 from abc import ABC, abstractmethod
 import sys
 
+from .empty_tag import EMPTY_TAG
 
 class DictTool:
-    def __init__(self, empty_tag: Any)->None:
-        self.empty_tag = empty_tag
 
     def filter_temp_values(
         self, 
@@ -41,8 +40,7 @@ class DictTool:
 
 
 
-    def merge_config(self, base: dict, override: dict, empty_tag: Any=None) -> dict:
-        empty_tag = empty_tag or self.empty_tag
+    def merge_config(self, base: dict, override: dict) -> dict:
 
         for key, value in override.items():
             # if value is empty_tag:
@@ -51,6 +49,8 @@ class DictTool:
             #     else:
             #         base[key] = deepcopy(value)
 
+            if value == EMPTY_TAG:
+                continue
             
             if isinstance(value, dict) and value.get('__delete__', False):
                 new_val = deepcopy(value)
@@ -62,11 +62,9 @@ class DictTool:
                 base[key] = deepcopy(value)
                 continue
                 
-            if value is empty_tag:
-                continue
 
             if isinstance(value, dict) and isinstance(base.get(key), dict):
-                self.merge_config(base[key], value, empty_tag)
+                self.merge_config(base[key], value)
                 continue
 
             if isinstance(value, list) and isinstance(base.get(key), list):

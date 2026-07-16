@@ -11,13 +11,10 @@ from functools import cached_property
 
 class DefaultConfigManagerFactory:
 
-    @cached_property
-    def overridden_tag(self)->str:
-        return EMPTY_TAG
 
     @cached_property
     def dict_tool(self)->DictTool:
-        return DictTool(self.overridden_tag)
+        return DictTool()
 
     @cached_property
     def config_accessor(self)->ConfigAccessor:

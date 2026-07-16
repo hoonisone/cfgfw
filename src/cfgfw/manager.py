@@ -2,7 +2,9 @@ from typing import Optional, List
 
 from .accessor import ConfigAccessor
 from .handler.handler import ConfigHandler
-WillBeOverridden = "WillBeOverridden"
+
+
+
 
 
 from pathlib import Path

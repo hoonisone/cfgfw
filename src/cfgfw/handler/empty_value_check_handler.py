@@ -3,20 +3,18 @@ from typing import Any
 from ..context import RecursiveContext
 from ..tool import DictTool
 from .handler import ConfigHandler
+from ..empty_tag import EMPTY_TAG
 
 
-EMPTY_TAG = "WillBeOverridden"
 
 class EmptyValueCheckHandler(ConfigHandler):
     """
         config 안에 EMPTY_TAG 가 있는지 체크하고
         있다면 오류와 함께 Empty key 목록을 출력한다.
     """
-    def __init__(self, empty_tag:Any=EMPTY_TAG)->None:
-        self.empty_tag = empty_tag
 
     def is_target(self, state:Any)->bool:
-        return state['data'] is self.empty_tag
+        return state['data'] == EMPTY_TAG
 
     def make_return(self, state:Any)->Any:
         keys = state['ref_history']
